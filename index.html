@@ -1,1 +1,27 @@
-<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>Snake Game</title>\n    <style>\n        body {\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            height: 100vh;\n            background-color: #f0f0f0;\n        }\n        canvas {\n            border: 1px solid #000;\n            background-color: #fff;\n        }\n    </style>\n</head>\n<body>\n    <canvas id="gameCanvas" width="400" height="400"></canvas>\n    <script>\n        const canvas = document.getElementById('gameCanvas');\n        const ctx = canvas.getContext('2d');\n        const box = 20;\n        let snake = [{ x: 9 * box, y: 9 * box }];\n        let direction = 'RIGHT';\n        let food = { x: Math.floor(Math.random() * 20) * box, y: Math.floor(Math.random() * 20) * box };\n\n        document.addEventListener('keydown', directionControl);\n        function directionControl(event) {\n            if (event.keyCode == 37 && direction != 'RIGHT') direction = 'LEFT';\n            else if (event.keyCode == 38 && direction != 'DOWN') direction = 'UP';\n            else if (event.keyCode == 39 && direction != 'LEFT') direction = 'RIGHT';\n            else if (event.keyCode == 40 && direction != 'UP') direction = 'DOWN';\n        }\n\n        function collision(head, array) {\n            for (let i = 0; i < array.length; i++) {\n                if (head.x == array[i].x && head.y == array[i].y) {\n                    return true;\n                }\n            }\n            return false;\n        }\n\n        function draw() {\n            ctx.clearRect(0, 0, canvas.width, canvas.height);\n            for (let i = 0; i < snake.length; i++) {\n                ctx.fillStyle = (i === 0) ? 'green' : 'white';\n                ctx.fillRect(snake[i].x, snake[i].y, box, box);\n                ctx.strokeStyle = 'black';\n                ctx.strokeRect(snake[i].x, snake[i].y, box, box);\n            }\n            ctx.fillStyle = 'red';\n            ctx.fillRect(food.x, food.y, box, box);\n\n            let snakeX = snake[0].x;\n            let snakeY = snake[0].y;\n\n            if (direction == 'LEFT') snakeX -= box;\n            if (direction == 'UP') snakeY -= box;\n            if (direction == 'RIGHT') snakeX += box;\n            if (direction == 'DOWN') snakeY += box;\n\n            if (snakeX == food.x && snakeY == food.y) {\n                food = { x: Math.floor(Math.random() * 20) * box, y: Math.floor(Math.random() * 20) * box };\n            } else {\n                snake.pop();\n            }\n\n            let newHead = { x: snakeX, y: snakeY };\n\n            if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {\n                clearInterval(game);\n                alert('Game Over!');\n                return;\n            }\n\n            snake.unshift(newHead);\n        }\n\n        let game = setInterval(draw, 100);\n    </script>\n</body>\n</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #gameCanvas { border: 1px solid black; }
+        #score, #difficulty { margin: 10px; }
+        #gameOverModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); color: white; }
+    </style>
+</head>
+<body>
+    <h1>Professional Snake Game</h1>
+    <div id="score">Score: <span id="scoreValue">0</span></div>
+    <div id="difficulty">Difficulty: <span id="difficultyValue">Easy</span></div>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <div id="gameOverModal">
+        <h2>Game Over</h2>
+        <button id="restartButton">Restart</button>
+    </div>
+    <script>
+        // JavaScript for game functionality goes here.
+    </script>
+</body>
+</html>
